@@ -1,0 +1,8 @@
+from: debian:buster-slim
+image_name: luckyraul/r10k:new
+cmd: /usr/local/bin/webhook
+maintainer: nikita@mygento.ru
+expose: 8088
+inventory: false
+env:
+  - DEBIAN_FRONTEND=noninteractive

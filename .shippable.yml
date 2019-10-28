@@ -1,0 +1,24 @@
+build:
+  pre_ci:
+    - apt-get install -qqy curl
+    - gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+    - gpg --keyserver hkp://keys.gnupg.net --recv-keys 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+    - curl -sSL https://get.rvm.io | grep -v __rvm_print_headline | bash -s stable --ruby
+    - source /usr/local/rvm/scripts/rvm
+    - gem install puppet --no-document
+    - rm -fR /etc/puppetlabs/code/modules/image_build
+    - git clone --single-branch --branch v2 https://github.com/luckyraul/puppetlabs-image_build.git /etc/puppetlabs/code/modules/image_build
+    - puppet docker build --image-name luckyraul/r10k:new
+  pre_ci_boot:
+    image_name: luckyraul/r10k
+    image_tag: new
+    pull: false
+  ci:
+     - echo true
+  push:
+    - docker push luckyraul/r10k:new
+integrations:
+    hub:
+      - integrationName: Docker
+        type: docker
+        agent_only: true
