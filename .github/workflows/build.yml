@@ -1,0 +1,43 @@
+name: Docker
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Test Ruby Version
+        run: ruby -v
+      - id: install_puppet
+        name: Install Puppet
+        continue-on-error: true
+        run: |
+          sudo apt-get -qqy install git sudo ruby
+          sudo gem install puppet --no-document
+          sudo rm -fR /etc/puppetlabs/code/modules/image_build
+          sudo git clone --single-branch --branch v2 https://github.com/luckyraul/puppetlabs-image_build.git /etc/puppetlabs/code/modules/image_build
+      - name: Test Puppet Version
+        run: puppet -V
+
+      - name: Build Image
+        run: sudo puppet docker build --image-name mygento/php:${{ matrix.version }} --no-show-diff
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Push image
+        run: |
+          docker tag luckyraul/r10k:10.1.1 ghcr.io/luckyraul/r10k:10.1.1
+          docker push ghcr.io/luckyraul/r10k:10.1.1

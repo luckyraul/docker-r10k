@@ -1,5 +1,5 @@
-from: debian:buster-slim
-image_name: luckyraul/r10k:new
+from: debian:bullseye-slim
+image_name: luckyraul/r10k:10.1.1
 cmd: /usr/local/bin/webhook
 maintainer: nikita@mygento.ru
 expose: 8088
