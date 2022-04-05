@@ -27,6 +27,7 @@ class {'r10k::webhook::config':
   use_mcollective => false,
   enable_ssl      => false,
   protected       => false,
+  access_logfile  => 'stderr',
 }
 
 class {'r10k::webhook':
