@@ -28,7 +28,7 @@ jobs:
         run: puppet -V
 
       - name: Build Image
-        run: sudo puppet docker build --image-name mygento/php:${{ matrix.version }} --no-show-diff
+        run: sudo puppet docker build --image-name luckyraul/r10k --no-show-diff --no-slim
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
