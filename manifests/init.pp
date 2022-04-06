@@ -11,16 +11,7 @@ exec { 'ssh_known_host_bitbucket':
   user    => 'root',
   require => Package['openssh-client'],
 } -> class { 'r10k':
-  sources => {
-    'puppet' => {
-      'remote'  => 'git@bitbucket.org:mygento/puppet-server.git',
-      'basedir' => '/etc/puppetlabs/code/environments',
-      'prefix'  => false,
-    }
-  },
-} -> file {'/etc/r10k.yaml':
-  ensure => 'link',
-  target => '/etc/puppetlabs/r10k/r10k.yaml',
+  sources => {},
 }
 
 class {'r10k::webhook::config':
